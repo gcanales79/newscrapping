@@ -12,7 +12,7 @@ $(document).on("click", ".saveButton", function () {
 
 })
 
-//Click the unsave Button
+//*Click the Delete from Savez Button
 
 $(document).on("click", ".deleteButton", function () {
   let thisId = $(this).attr("data-id");
@@ -22,7 +22,8 @@ $(document).on("click", ".deleteButton", function () {
     url: "/api/unsaved/" + thisId
   })
     .then(function (data) {
-      console.log(data);
+      //console.log(data);
+      window.location.href="/articulos"
     });
 
 })
