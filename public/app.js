@@ -27,6 +27,7 @@ $(document).on("click", ".deleteButton", function () {
 
 })
 
+//*Accion al hacer click en ArticleNotes
 $(document).on("click", ".noteButton", function () {
   let thisId = $(this).attr("data-id");
   //console.log("El valor del id es: " + thisId)
@@ -36,7 +37,7 @@ $(document).on("click", ".noteButton", function () {
   })
     .then(function (data) {
       console.log(data)
-      $("#ModalLabel").text("Notes for Article" + data._id)
+      $("#ModalLabelNote").text("Notes for Article" + data._id)
       //Primero que limpie don de vas a poner los comentarios
       $("#areaComentario").empty();
       $("#saveNote").attr("data-id", data._id)
@@ -54,7 +55,7 @@ $(document).on("click", ".noteButton", function () {
         $("#areaComentario").append("<hr>");
       }
     })
-  $(".modalNote").modal('show');
+  $("#modalNote").modal('show');
 
 });
 
@@ -77,7 +78,7 @@ $(document).on("click", "#saveNote", function () {
     .then(function (data) {
       // Log the response
       //console.log(data);
-      $(".modalNote").modal('hide');
+      $("#modalNote").modal('hide');
       // Empty the notes section
     });
 
@@ -96,7 +97,7 @@ $(document).on("click", ".borrarNota", function () {
   })
     .then(function (data) {
       //console.log(data);
-      $(".modalNote").modal("hide");
+      $("#modalNote").modal("hide");
     });
 })
 
