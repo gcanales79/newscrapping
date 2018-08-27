@@ -1,0 +1,25 @@
+#banner{
+    background-image: url(../images/trofeo.jpg);
+    max-width: 100%;
+    height: 600px;
+    background-size:     contain;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;              /* optional, center the image */
+
+}
+
+#titulo{
+    padding-top:300px;
+}
+
+.letras{
+    color:#fff;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    background-color: #FCF5C7;
+   height: 200px;
+    font-size: 18px;
+  }

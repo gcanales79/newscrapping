@@ -1,1 +1,27 @@
-<div>Hola</div>
+<br>
+<div class="container">
+    {{#each articulos}}
+    <div>
+        <div class="row justify-content-start news">
+            <div class="col-10">
+                <h2>{{this.title}}</h2>
+            </div>
+            <div class="col-2">
+                <button class="saveButton btn btn-success btn-sm" data-id={{this._id}}>Save Article</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h5>{{this.summary}}</h5>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <a href={{this.link}}>Ver Noticia Completa</a>
+            </div>
+        </div>
+    </div>
+    <hr /> {{/each}}
+
+</div>

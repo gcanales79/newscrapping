@@ -1,72 +1,122 @@
-// Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-  }
-});
+//Click on Save Button
+$(document).on("click", ".saveButton", function () {
+  let thisId = $(this).attr("data-id");
+  //console.log("Entro al click"),
+  $.ajax({
+    method: "POST",
+    url: "/api/articles/" + thisId
+  })
+    .then(function (data) {
+      console.log(data);
+    });
 
+})
 
-// Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
-  // Empty the notes from the note section
-  $("#notes").empty();
-  // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
+//Click the unsave Button
 
-  // Now make an ajax call for the Article
+$(document).on("click", ".deleteButton", function () {
+  let thisId = $(this).attr("data-id");
+  //console.log("Entro al click"),
+  $.ajax({
+    method: "POST",
+    url: "/api/unsaved/" + thisId
+  })
+    .then(function (data) {
+      console.log(data);
+    });
+
+})
+
+$(document).on("click", ".noteButton", function () {
+  let thisId = $(this).attr("data-id");
+  //console.log("El valor del id es: " + thisId)
   $.ajax({
     method: "GET",
-    url: "/articles/" + thisId
+    url: "api/article/" + thisId
   })
-    // With that done, add the note information to the page
-    .then(function(data) {
-      console.log(data);
-      // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
-      // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
-
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
+    .then(function (data) {
+      console.log(data)
+      $("#ModalLabel").text("Notes for Article" + data._id)
+      //Primero que limpie don de vas a poner los comentarios
+      $("#areaComentario").empty();
+      $("#saveNote").attr("data-id", data._id)
+      for (let i = 0; i < data.note.length; i++) {
+        //Aqui va los comentarios 
+        let comentario = $("<div>");
+        comentario.addClass("col-8")
+        let botonBorrarnota = $("<button>")
+        botonBorrarnota.addClass("col-2 btn btn-danger btn-sm borrarNota")
+        botonBorrarnota.attr("data-id", data.note[i]._id)
+        botonBorrarnota.text("X")
+        comentario.text(data.note[i].body);
+        $("#areaComentario").append(comentario);
+        $("#areaComentario").append(botonBorrarnota);
+        $("#areaComentario").append("<hr>");
       }
-    });
+    })
+  $(".modalNote").modal('show');
+
 });
 
 // When you click the savenote button
-$(document).on("click", "#savenote", function() {
+$(document).on("click", "#saveNote", function () {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-
+  //console.log("El id del buton guardar nota es " + thisId)
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: "POST",
-    url: "/articles/" + thisId,
+    url: "/addnote/" + thisId,
     data: {
-      // Value taken from title input
-      title: $("#titleinput").val(),
+
       // Value taken from note textarea
       body: $("#bodyinput").val()
     }
   })
     // With that done
-    .then(function(data) {
+    .then(function (data) {
       // Log the response
-      console.log(data);
+      //console.log(data);
+      $(".modalNote").modal('hide');
       // Empty the notes section
-      $("#notes").empty();
     });
 
   // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
   $("#bodyinput").val("");
+
 });
+
+//* Boton para borrar una nota de un articulo
+$(document).on("click", ".borrarNota", function () {
+  var thisId = $(this).attr("data-id");
+  console.log("El id de la nota es " + thisId);
+  $.ajax({
+    method: "GET",
+    url: "/deletenote/" + thisId
+  })
+    .then(function (data) {
+      //console.log(data);
+      $(".modalNote").modal("hide");
+    });
+})
+
+
+//* Boton scrape
+$(document).on("click", "#scrapeNews", function () {
+  $.ajax({
+    method: "GET",
+    url: "/scrape"
+  })
+    .then(function (data) {
+      //console.log(data)
+      $("#modalBody").text("You have scrapped " + data.length + " new articles")
+      $("#modalScrape").modal("show");
+    })
+
+})
+
+//*Reload page after scrap
+
+$(document).on("click","#closeScrapemodal",function(){
+  window.location.href="/"
+})
