@@ -26,7 +26,16 @@ var axios = require("axios");
 var cheerio = require("cheerio");
 
 // Require all models
-var db = require("./models");
+//var db = require("./models");
+
+var db=mongoose.connection;
+db.on("error",function(err){
+  console.log("Mongoose Error: ", err);
+});
+
+db.once("open",function(){
+  console.log("Mongoose connection succesful.")
+})
 
 var PORT = 3000;
 
